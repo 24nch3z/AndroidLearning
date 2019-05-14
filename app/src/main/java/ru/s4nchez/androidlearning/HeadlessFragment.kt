@@ -5,18 +5,48 @@ import android.support.v4.app.Fragment
 
 class HeadlessFragment : Fragment(), HeadlessFragmentContract {
 
+    private var isLoading: Boolean = false
+    private var listener: HeadlessFragmentListener? = null
+    private var result: Double? = null
+
+    fun setListener(listener: HeadlessFragmentListener) {
+        this.listener = listener
+        result?.let { listener.onLoad(it) }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
     }
 
-    override fun start(count: Int) {
-        if (count < 0) return
+    override fun onPause() {
+        Logger.l("onPause")
+        super.onPause()
+    }
+
+    override fun onStop() {
+        Logger.l("onStop")
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        Logger.l("onDestroy")
+        super.onDestroy()
+    }
+
+    override fun load() {
+        if (result != null) {
+            listener?.onLoad(result!!)
+            return
+        }
+        if (isLoading) {
+            return
+        }
+
         Thread(Runnable {
-            for (i in count downTo 0) {
-                Thread.sleep(1000)
-                Logger.l(i.toString())
-            }
-        }).start()
+            Thread.sleep(6000)
+            result = Math.random()
+            listener?.onLoad(result!!)
+        })
     }
 }

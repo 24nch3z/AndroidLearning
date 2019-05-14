@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), HeadlessFragmentListener {
 
     private val HEADLESS_TAG = "headless"
     private var headlessFragment: HeadlessFragment? = null
@@ -21,6 +21,15 @@ class MainActivity : AppCompatActivity() {
                     .commit()
         }
 
-        action.setOnClickListener { headlessFragment?.let { (it as HeadlessFragmentContract).start(5) } }
+        headlessFragment?.let { (it as HeadlessFragmentContract).load() }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        headlessFragment = null
+    }
+
+    override fun onLoad(result: Double) {
+        action.text = result.toString()
     }
 }
