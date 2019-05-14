@@ -21,7 +21,10 @@ class MainActivity : AppCompatActivity(), HeadlessFragmentListener {
                     .commit()
         }
 
-        headlessFragment?.let { (it as HeadlessFragmentContract).load() }
+        (headlessFragment as HeadlessFragmentContract?)?.let {
+            it.setListener(this)
+            it.load()
+        }
     }
 
     override fun onDestroy() {
