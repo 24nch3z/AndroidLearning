@@ -1,8 +1,9 @@
-package ru.s4nchez.androidlearning
+package ru.s4nchez.androidlearning.headless
 
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
+import ru.s4nchez.androidlearning.Logger
 
 class HeadlessFragment : Fragment(), HeadlessFragmentContract {
 
@@ -13,7 +14,7 @@ class HeadlessFragment : Fragment(), HeadlessFragmentContract {
 
     override fun setListener(listener: HeadlessFragmentListener) {
         this.listener = listener
-        result?.let { listener.onLoad(it) }
+//        result?.let { listener.onLoad(it) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

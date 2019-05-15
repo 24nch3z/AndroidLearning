@@ -1,4 +1,4 @@
-package ru.s4nchez.androidlearning
+package ru.s4nchez.androidlearning.headless
 
 interface HeadlessFragmentContract {
     fun load()
