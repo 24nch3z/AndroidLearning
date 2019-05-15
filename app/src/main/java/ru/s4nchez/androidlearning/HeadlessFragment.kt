@@ -17,9 +17,20 @@ class HeadlessFragment : Fragment(), HeadlessFragmentContract {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Logger.l("onCreate")
         super.onCreate(savedInstanceState)
         retainInstance = true
         handler = Handler()
+    }
+
+    override fun onStart() {
+        Logger.l("onStart")
+        super.onStart()
+    }
+
+    override fun onResume() {
+        Logger.l("onResume")
+        super.onResume()
     }
 
     override fun onPause() {
@@ -34,6 +45,8 @@ class HeadlessFragment : Fragment(), HeadlessFragmentContract {
 
     override fun onDestroy() {
         Logger.l("onDestroy")
+        this.listener = null
+        this.handler?.removeCallbacksAndMessages(null)
         super.onDestroy()
     }
 
@@ -49,6 +62,7 @@ class HeadlessFragment : Fragment(), HeadlessFragmentContract {
         isLoading = true
         Thread(Runnable {
             Thread.sleep(6000)
+            Logger.l("Load Success")
             result = Math.random()
             handler?.post { listener?.onLoad(result!!) }
             isLoading = false
