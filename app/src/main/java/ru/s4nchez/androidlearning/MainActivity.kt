@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import ru.s4nchez.androidlearning.option1.PendingIntentFragment
+import ru.s4nchez.androidlearning.option2.BroadcastReceiverFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
-            setFragment(PendingIntentFragment())
+            setFragment(BroadcastReceiverFragment())
         }
     }
 
