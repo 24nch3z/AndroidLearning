@@ -17,6 +17,7 @@ class ServiceConnectionService : Service() {
         }
     }
 
+    val binder = MyBinder()
     lateinit var executor: ExecutorService
 
     override fun onCreate() {
@@ -32,7 +33,7 @@ class ServiceConnectionService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
         Logger.l("onBind")
-        return Binder()
+        return binder
     }
 
     override fun onRebind(intent: Intent?) {
@@ -48,5 +49,18 @@ class ServiceConnectionService : Service() {
     override fun onDestroy() {
         Logger.l("onDestroy")
         super.onDestroy()
+    }
+
+    fun run() {
+        executor.execute {
+            Thread.sleep(3000)
+            Logger.l("After run")
+        }
+    }
+
+    inner class MyBinder : Binder() {
+        fun getService(): ServiceConnectionService {
+            return this@ServiceConnectionService
+        }
     }
 }

@@ -19,18 +19,21 @@ class ServiceConnectionFragment : Fragment() {
 
     lateinit var serviceConnection: ServiceConnection
     var isBound = false
+    var service: ServiceConnectionService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         serviceConnection = object : ServiceConnection {
-            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
                 Logger.l("onServiceConnected")
                 isBound = true
+                service = (binder as ServiceConnectionService.MyBinder).getService()
             }
 
             override fun onServiceDisconnected(name: ComponentName?) {
                 Logger.l("onServiceDisconnected")
                 isBound = false
+                service = null
             }
         }
     }
@@ -50,5 +53,6 @@ class ServiceConnectionFragment : Fragment() {
                 isBound = false
             }
         }
+        action.setOnClickListener { service?.run() }
     }
 }
