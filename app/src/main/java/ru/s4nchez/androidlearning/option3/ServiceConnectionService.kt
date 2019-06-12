@@ -43,11 +43,13 @@ class ServiceConnectionService : Service() {
 
     override fun onUnbind(intent: Intent?): Boolean {
         Logger.l("onUnbind")
+        binder.unbind()
         return super.onUnbind(intent)
     }
 
     override fun onDestroy() {
         Logger.l("onDestroy")
+        binder.unbind()
         super.onDestroy()
     }
 
@@ -55,12 +57,24 @@ class ServiceConnectionService : Service() {
         executor.execute {
             Thread.sleep(3000)
             Logger.l("After run")
+            binder.view?.showResult("Execute Complete")
         }
     }
 
     inner class MyBinder : Binder() {
+
+        var view: ServiceContract? = null
+
         fun getService(): ServiceConnectionService {
             return this@ServiceConnectionService
+        }
+
+        fun bindView(view: ServiceContract) {
+            this.view = view
+        }
+
+        fun unbind() {
+            this.view = null
         }
     }
 }

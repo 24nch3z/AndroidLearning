@@ -27,7 +27,9 @@
             android:name=".option2.BroadcastReceiverService"
             android:process=":BroadcastReceiverServiceProcess" />
 
-        <service android:name=".option3.ServiceConnectionService" />
+        <service
+            android:name=".option3.ServiceConnectionService"
+            android:exported="true" />
     </application>
 
 </manifest>

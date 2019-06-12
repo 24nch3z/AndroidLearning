@@ -15,19 +15,22 @@ import kotlinx.android.synthetic.main.fragment_main.stop
 import ru.s4nchez.androidlearning.Logger
 import ru.s4nchez.androidlearning.R
 
-class ServiceConnectionFragment : Fragment() {
+class ServiceConnectionFragment : Fragment(), ServiceContract {
 
-    lateinit var serviceConnection: ServiceConnection
-    var isBound = false
-    var service: ServiceConnectionService? = null
+    private lateinit var serviceConnection: ServiceConnection
+    private var isBound = false
+    private var service: ServiceConnectionService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         serviceConnection = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
                 Logger.l("onServiceConnected")
-                isBound = true
-                service = (binder as ServiceConnectionService.MyBinder).getService()
+                (binder as? ServiceConnectionService.MyBinder)?.let {
+                    service = it.getService()
+                    it.bindView(this@ServiceConnectionFragment)
+                    isBound = true
+                }
             }
 
             override fun onServiceDisconnected(name: ComponentName?) {
@@ -54,5 +57,9 @@ class ServiceConnectionFragment : Fragment() {
             }
         }
         action.setOnClickListener { service?.run() }
+    }
+
+    override fun showResult(msg: String) {
+        text.post { text.text = msg }
     }
 }
