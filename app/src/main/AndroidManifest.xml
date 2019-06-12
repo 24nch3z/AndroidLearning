@@ -19,8 +19,13 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".option1.PendingIntentService" />
-        <service android:name=".option2.BroadcastReceiverService" />
+        <service
+            android:name=".option1.PendingIntentService"
+            android:process=":PendingIntentServiceProcess" />
+
+        <service
+            android:name=".option2.BroadcastReceiverService"
+            android:process=":BroadcastReceiverServiceProcess" />
     </application>
 
 </manifest>
