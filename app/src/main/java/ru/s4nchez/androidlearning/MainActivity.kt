@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import ru.s4nchez.androidlearning.option2.BroadcastReceiverFragment
+import ru.s4nchez.androidlearning.option3.ServiceConnectionFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
-            setFragment(BroadcastReceiverFragment())
+            setFragment(ServiceConnectionFragment())
         }
     }
 
