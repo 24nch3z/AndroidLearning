@@ -32,8 +32,12 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
     private val sliderRectInset = 4f
     private val sliderXOffset = 0f
 
+    private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+
     init {
         attrs?.let { consumeAttributeSet(context, it) }
+        textPaint.color = Color.BLACK
+        textPaint.textSize = 48f
     }
 
     private fun consumeAttributeSet(context: Context, attrs: AttributeSet) {
@@ -59,12 +63,12 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
 
     private fun resolveLeftTabText(typedArray: TypedArray): String {
         val leftTabText = typedArray.getString(R.styleable.SliderTabs_st_leftTabText)
-        return leftTabText ?: "Лева"
+        return leftTabText ?: "Левый"
     }
 
     private fun resolveRightTabText(typedArray: TypedArray): String {
         val leftTabText = typedArray.getString(R.styleable.SliderTabs_st_rightTabText)
-        return leftTabText ?: "Права"
+        return leftTabText ?: "Правый"
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -83,23 +87,24 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         if (isViewVisible(w, h)) {
-            calculateBackgroundRectF(w, h) // Возможно, параметры не нужны
-            calculateSliderRectF(w, h)
+            calculateBackgroundRectF()
+            calculateSliderRectF()
         }
     }
 
     private fun isViewVisible(w: Int, h: Int) = w > 0 && h > 0
 
-    private fun calculateBackgroundRectF(w: Int, h: Int) {
+    private fun calculateBackgroundRectF() {
         backgroundRectF.left = 0f
         backgroundRectF.top = 0f
-        backgroundRectF.right = w.toFloat()
-        backgroundRectF.bottom = h.toFloat()
+        backgroundRectF.right = width.toFloat()
+        backgroundRectF.bottom = height.toFloat()
     }
 
     override fun onDraw(canvas: Canvas) {
         drawBackground(canvas)
         drawSlider(canvas)
+        drawText(canvas)
     }
 
     private fun drawBackground(canvas: Canvas) {
@@ -112,26 +117,61 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
         canvas.drawRoundRect(sliderRectF, BACKGROUND_RECT_RADIUS, BACKGROUND_RECT_RADIUS, rectPaint)
     }
 
-    private fun calculateSliderRectF(w: Int, h: Int) {
-        sliderRectF.left = calculateSliderRectLeft(w, h)
-        sliderRectF.top = calculateSliderRectTop(w, h)
-        sliderRectF.right = calculateSliderRectRight(w, h)
-        sliderRectF.bottom = calculateSliderRectBottom(w, h)
+    private fun calculateSliderRectF() {
+        sliderRectF.left = calculateSliderRectLeft()
+        sliderRectF.top = calculateSliderRectTop()
+        sliderRectF.right = calculateSliderRectRight()
+        sliderRectF.bottom = calculateSliderRectBottom()
     }
 
-    private fun calculateSliderRectLeft(w: Int, h: Int): Float {
+    private fun calculateSliderRectLeft(): Float {
         return SLIDER_RECT_LEFT + sliderRectInset + sliderXOffset
     }
 
-    private fun calculateSliderRectTop(w: Int, h: Int): Float {
+    private fun calculateSliderRectTop(): Float {
         return SLIDER_RECT_TOP + sliderRectInset
     }
 
-    private fun calculateSliderRectRight(w: Int, h: Int): Float {
-        return w / TABS_COUNT - sliderRectInset + sliderXOffset
+    private fun calculateSliderRectRight(): Float {
+        return width / TABS_COUNT - sliderRectInset + sliderXOffset
     }
 
-    private fun calculateSliderRectBottom(w: Int, h: Int): Float {
-        return h - sliderRectInset
+    private fun calculateSliderRectBottom(): Float {
+        return height - sliderRectInset
+    }
+
+    private fun drawText(canvas: Canvas) {
+        drawLeftTabText(canvas)
+        drawRightTabText(canvas)
+    }
+
+    private fun drawLeftTabText(canvas: Canvas) {
+        val textWidth = textPaint.measureText(leftTabText)
+        canvas.drawText(
+                leftTabText,
+                calculateTabTextX(1, textWidth),
+                calculateTabTextY(),
+                textPaint
+        )
+    }
+
+    private fun drawRightTabText(canvas: Canvas) {
+        val textWidth = textPaint.measureText(rightTabText)
+        canvas.drawText(
+                rightTabText,
+                calculateTabTextX(2, textWidth),
+                calculateTabTextY(),
+                textPaint
+        )
+    }
+
+    private fun calculateTabTextX(tabsPosition: Int, textWidth: Float): Float {
+        val tabWidth = width / TABS_COUNT
+        val startX = (tabsPosition - 1) * tabWidth
+        return tabWidth.toFloat() / 2 - textWidth / 2 + startX
+    }
+
+    private fun calculateTabTextY(): Float {
+        return height / 2 - (textPaint.descent() + textPaint.ascent()) / 2
     }
 }
