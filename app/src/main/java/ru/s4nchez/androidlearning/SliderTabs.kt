@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 
 class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) {
@@ -129,13 +130,11 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
     }
 
     private fun calculateSliderRectLeft(sliderPosition: Int): Float {
-        val tabWidth = width / options.size
-        return (sliderPosition - 1) * tabWidth + sliderRectInset
+        return (sliderPosition - 1) * tabWidth() + sliderRectInset
     }
 
     private fun calculateSliderRectRight(sliderPosition: Int): Float {
-        val tabWidth = width / options.size
-        return sliderPosition * tabWidth - sliderRectInset
+        return sliderPosition * tabWidth() - sliderRectInset
     }
 
     private fun calculateSliderRectTop(): Float {
@@ -161,12 +160,44 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
     }
 
     private fun calculateTabTextX(sliderPosition: Int, textWidth: Float): Float {
-        val tabWidth = width / options.size
-        val startX = (sliderPosition - 1) * tabWidth
-        return tabWidth.toFloat() / 2 - textWidth / 2 + startX
+        val startX = (sliderPosition - 1) * tabWidth()
+        return tabWidth().toFloat() / 2 - textWidth / 2 + startX
     }
 
     private fun calculateTabTextY(): Float {
         return height / 2 - (textPaint.descent() + textPaint.ascent()) / 2
     }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        var isEventHandled = false
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> isEventHandled = true
+            MotionEvent.ACTION_UP -> {
+                handleClick(event.x)
+                performClick()
+                isEventHandled = true
+            }
+            MotionEvent.ACTION_CANCEL -> isEventHandled = true
+        }
+        return isEventHandled
+    }
+
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
+
+    private fun handleClick(x: Float) {
+        val newSliderPosition = getSliderPositionByXOffset(x)
+        if (sliderPosition != newSliderPosition) {
+            sliderPosition = newSliderPosition
+            invalidate()
+        }
+    }
+
+    private fun getSliderPositionByXOffset(x: Float): Int {
+        return (x / tabWidth()).toInt() + 1
+    }
+
+    private fun tabWidth() = width / options.size
 }
