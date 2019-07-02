@@ -1,5 +1,8 @@
 package ru.s4nchez.androidlearning
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -8,6 +11,8 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AccelerateInterpolator
 
 class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
@@ -33,6 +38,10 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
     private val sliderRectInset = 4.0f
 
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    private var animSliderLeftSideXOffset = 0.0f
+    private var animSliderRightSideXOffset = 0.0f
+    private var isAnimate = false
 
     init {
         attrs?.let { consumeAttributeSet(context, it) }
@@ -130,11 +139,11 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
     }
 
     private fun calculateSliderRectLeft(sliderPosition: Int): Float {
-        return (sliderPosition - 1) * tabWidth() + sliderRectInset
+        return (sliderPosition - 1) * tabWidth() + sliderRectInset - animSliderLeftSideXOffset
     }
 
     private fun calculateSliderRectRight(sliderPosition: Int): Float {
-        return sliderPosition * tabWidth() - sliderRectInset
+        return sliderPosition * tabWidth() - sliderRectInset - animSliderRightSideXOffset
     }
 
     private fun calculateSliderRectTop(): Float {
@@ -169,6 +178,7 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (isAnimate) return true
         var isEventHandled = false
         when (event.action) {
             MotionEvent.ACTION_DOWN -> isEventHandled = true
@@ -190,7 +200,41 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
     private fun handleClick(x: Float) {
         val newSliderPosition = getSliderPositionByXOffset(x)
         if (sliderPosition != newSliderPosition) {
+            val positionDiff = newSliderPosition - sliderPosition
             sliderPosition = newSliderPosition
+
+            animSliderLeftSideXOffset = (tabWidth() * positionDiff).toFloat()
+            animSliderRightSideXOffset = animSliderLeftSideXOffset
+
+            val animatorLeft = ValueAnimator.ofFloat(animSliderLeftSideXOffset, 0.0f)
+            animatorLeft.duration = 300
+            if (positionDiff < 0) {
+                animatorLeft.interpolator = AccelerateDecelerateInterpolator()
+            } else {
+                animatorLeft.interpolator = AccelerateInterpolator()
+            }
+            animatorLeft.addUpdateListener {
+                animSliderLeftSideXOffset = it.animatedValue as Float
+                invalidate()
+            }
+            animatorLeft.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    super.onAnimationEnd(animation)
+                    isAnimate = false
+                }
+            })
+            animatorLeft.start()
+
+            val animatorRight = ValueAnimator.ofFloat(animSliderRightSideXOffset, 0.0f)
+            animatorRight.duration = 300
+            if (positionDiff < 0) {
+                animatorRight.interpolator = AccelerateInterpolator()
+            } else {
+                animatorRight.interpolator = AccelerateDecelerateInterpolator()
+            }
+            animatorRight.addUpdateListener { animSliderRightSideXOffset = it.animatedValue as Float }
+            animatorRight.start()
+            isAnimate = true
             invalidate()
         }
     }
