@@ -9,9 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:padding="16dp"
-        app:st_backgroundColor="#CCC"
+        app:st_backgroundColor="#FFCCCCCC"
         app:st_cornersRadius="24dp"
         app:st_defaultSliderOption="3"
-        app:st_options="@array/slider_options" />
+        app:st_options="@array/slider_options"
+        app:st_textColor="#FF555555"
+        app:st_textSize="16dp" />
 
 </FrameLayout>

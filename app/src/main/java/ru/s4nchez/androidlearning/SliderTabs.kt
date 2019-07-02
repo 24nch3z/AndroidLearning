@@ -15,6 +15,8 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
         private const val DEFAULT_BG_COLOR_HEX = "#EAE9F0"
         private const val DEFAULT_SLIDER_POSITION = 1
         private const val DEFAULT_CORNERS_RADIUS = 60.0f
+        private const val DEFAULT_TEXT_SIZE = 48.0f
+        private const val DEFAULT_TEXT_COLOR = "#FF333333"
     }
 
     private var sliderPosition = DEFAULT_SLIDER_POSITION
@@ -33,8 +35,6 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
 
     init {
         attrs?.let { consumeAttributeSet(context, it) }
-        textPaint.color = Color.parseColor("#FF444444")
-        textPaint.textSize = 48.0f
     }
 
     private fun consumeAttributeSet(context: Context, attrs: AttributeSet) {
@@ -51,11 +51,25 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
                     Color.parseColor(DEFAULT_BG_COLOR_HEX)
             )
             options = typedArray.getTextArray(R.styleable.SliderTabs_st_options)
-            sliderPosition = typedArray.getInteger(R.styleable.SliderTabs_st_defaultSliderOption, DEFAULT_SLIDER_POSITION)
+            sliderPosition = typedArray.getInteger(
+                    R.styleable.SliderTabs_st_defaultSliderOption,
+                    DEFAULT_SLIDER_POSITION
+            )
             if (sliderPosition > options.size) {
                 sliderPosition = DEFAULT_SLIDER_POSITION
             }
-            cornersRadius = typedArray.getDimension(R.styleable.SliderTabs_st_cornersRadius, DEFAULT_CORNERS_RADIUS)
+            cornersRadius = typedArray.getDimension(
+                    R.styleable.SliderTabs_st_cornersRadius,
+                    DEFAULT_CORNERS_RADIUS
+            )
+            textPaint.color = typedArray.getColor(
+                    R.styleable.SliderTabs_st_textColor,
+                    Color.parseColor(DEFAULT_TEXT_COLOR)
+            )
+            textPaint.textSize = typedArray.getDimension(
+                    R.styleable.SliderTabs_st_textSize,
+                    DEFAULT_TEXT_SIZE
+            )
         } finally {
             typedArray.recycle()
         }
