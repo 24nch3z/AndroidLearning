@@ -4,5 +4,9 @@
         <attr name="st_backgroundColor" format="color" />
         <attr name="st_sliderColor" format="color" />
         <attr name="st_options" format="reference" />
+        <attr name="st_defaultSliderOption" format="integer" />
+        <attr name="st_radius" format="dimension" />
+        <attr name="st_textSize" format="dimension" />
+        <attr name="st_textColor" format="color" />
     </declare-styleable>
 </resources>

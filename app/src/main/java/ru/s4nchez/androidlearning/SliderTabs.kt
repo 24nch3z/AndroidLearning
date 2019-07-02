@@ -13,14 +13,15 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
     companion object {
         private const val DEFAULT_SLIDER_COLOR_HEX = "#FFFFFF"
         private const val DEFAULT_BG_COLOR_HEX = "#EAE9F0"
+        private const val DEFAULT_SLIDER_POSITION = 1
         private const val BACKGROUND_RECT_RADIUS = 60f
     }
 
-    private var sliderPosition = 3
+    private var sliderPosition = DEFAULT_SLIDER_POSITION
 
     private lateinit var options: Array<CharSequence>
 
-    private var _backgroundColor: Int = 0
+    private var sliderBackgroundColor: Int = 0
     private var sliderColor: Int = 0
 
     private val backgroundRectF = RectF()
@@ -43,7 +44,7 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
                 .obtainStyledAttributes(attrs, R.styleable.SliderTabs, 0, 0)
 
         try {
-            _backgroundColor = typedArray.getColor(
+            sliderBackgroundColor = typedArray.getColor(
                     R.styleable.SliderTabs_st_backgroundColor,
                     Color.parseColor(DEFAULT_SLIDER_COLOR_HEX)
             )
@@ -52,6 +53,8 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
                     Color.parseColor(DEFAULT_BG_COLOR_HEX)
             )
             options = typedArray.getTextArray(R.styleable.SliderTabs_st_options)
+            sliderPosition = typedArray.getInteger(R.styleable.SliderTabs_st_defaultSliderOption, DEFAULT_SLIDER_POSITION)
+            if (sliderPosition > options.size) sliderPosition = DEFAULT_SLIDER_POSITION
         } finally {
             typedArray.recycle()
         }
@@ -93,7 +96,7 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
     }
 
     private fun drawBackground(canvas: Canvas) {
-        rectPaint.color = _backgroundColor
+        rectPaint.color = sliderBackgroundColor
         canvas.drawRoundRect(backgroundRectF, BACKGROUND_RECT_RADIUS, BACKGROUND_RECT_RADIUS, rectPaint)
     }
 
