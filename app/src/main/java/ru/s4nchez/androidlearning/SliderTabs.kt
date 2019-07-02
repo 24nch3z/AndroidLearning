@@ -11,8 +11,8 @@ import android.view.View
 class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
     companion object {
-        private const val DEFAULT_SLIDER_COLOR_HEX = "#FFFFFF"
-        private const val DEFAULT_BG_COLOR_HEX = "#EAE9F0"
+        private const val DEFAULT_SLIDER_COLOR_HEX = "#FFFFFFFF"
+        private const val DEFAULT_BG_COLOR_HEX = "#FFEAE9F0"
         private const val DEFAULT_SLIDER_POSITION = 1
         private const val DEFAULT_CORNERS_RADIUS = 60.0f
         private const val DEFAULT_TEXT_SIZE = 48.0f

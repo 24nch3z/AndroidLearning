@@ -13,6 +13,7 @@
         app:st_cornersRadius="24dp"
         app:st_defaultSliderOption="3"
         app:st_options="@array/slider_options"
+        app:st_sliderColor="#FFFFFFFF"
         app:st_textColor="#FF555555"
         app:st_textSize="16dp" />
 
