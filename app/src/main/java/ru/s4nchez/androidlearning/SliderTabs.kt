@@ -15,8 +15,8 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
         private const val DEFAULT_SLIDER_COLOR_HEX = "#FFFFFF"
         private const val DEFAULT_BG_COLOR_HEX = "#EAE9F0"
         private const val BACKGROUND_RECT_RADIUS = 60f
-        private const val SLIDER_RECT_LEFT = 0f
-        private const val SLIDER_RECT_TOP = 0f
+//        private const val SLIDER_RECT_LEFT = 0f
+//        private const val SLIDER_RECT_TOP = 0f
         private const val TABS_COUNT = 2
     }
 
@@ -31,6 +31,8 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
     private val sliderRectF = RectF()
     private val sliderRectInset = 4f
     private val sliderXOffset = 0f
+
+    private var sliderPosition = 2
 
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -88,7 +90,6 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         if (isViewVisible(w, h)) {
             calculateBackgroundRectF()
-            calculateSliderRectF()
         }
     }
 
@@ -113,27 +114,30 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
     }
 
     private fun drawSlider(canvas: Canvas) {
+        calculateSliderRectF()
         rectPaint.color = sliderColor
         canvas.drawRoundRect(sliderRectF, BACKGROUND_RECT_RADIUS, BACKGROUND_RECT_RADIUS, rectPaint)
     }
 
     private fun calculateSliderRectF() {
-        sliderRectF.left = calculateSliderRectLeft()
+        sliderRectF.left = calculateSliderRectLeft(sliderPosition)
         sliderRectF.top = calculateSliderRectTop()
-        sliderRectF.right = calculateSliderRectRight()
+        sliderRectF.right = calculateSliderRectRight(sliderPosition)
         sliderRectF.bottom = calculateSliderRectBottom()
     }
 
-    private fun calculateSliderRectLeft(): Float {
-        return SLIDER_RECT_LEFT + sliderRectInset + sliderXOffset
+    private fun calculateSliderRectLeft(sliderPosition: Int): Float {
+        val tabWidth = width / TABS_COUNT
+        return (sliderPosition - 1) * tabWidth + sliderRectInset
+    }
+
+    private fun calculateSliderRectRight(sliderPosition: Int): Float {
+        val tabWidth = width / TABS_COUNT
+        return sliderPosition * tabWidth - sliderRectInset
     }
 
     private fun calculateSliderRectTop(): Float {
-        return SLIDER_RECT_TOP + sliderRectInset
-    }
-
-    private fun calculateSliderRectRight(): Float {
-        return width / TABS_COUNT - sliderRectInset + sliderXOffset
+        return sliderRectInset
     }
 
     private fun calculateSliderRectBottom(): Float {
@@ -165,9 +169,9 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
         )
     }
 
-    private fun calculateTabTextX(tabsPosition: Int, textWidth: Float): Float {
+    private fun calculateTabTextX(sliderPosition: Int, textWidth: Float): Float {
         val tabWidth = width / TABS_COUNT
-        val startX = (tabsPosition - 1) * tabWidth
+        val startX = (sliderPosition - 1) * tabWidth
         return tabWidth.toFloat() / 2 - textWidth / 2 + startX
     }
 
