@@ -1,7 +1,6 @@
 package ru.s4nchez.androidlearning
 
 import android.content.Context
-import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -15,13 +14,12 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
         private const val DEFAULT_SLIDER_COLOR_HEX = "#FFFFFF"
         private const val DEFAULT_BG_COLOR_HEX = "#EAE9F0"
         private const val BACKGROUND_RECT_RADIUS = 60f
-//        private const val SLIDER_RECT_LEFT = 0f
-//        private const val SLIDER_RECT_TOP = 0f
-        private const val TABS_COUNT = 2
     }
 
-    private lateinit var leftTabText: String
-    private lateinit var rightTabText: String
+    private var sliderPosition = 3
+
+    private lateinit var options: Array<CharSequence>
+
     private var _backgroundColor: Int = 0
     private var sliderColor: Int = 0
 
@@ -30,15 +28,12 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
 
     private val sliderRectF = RectF()
     private val sliderRectInset = 4f
-    private val sliderXOffset = 0f
-
-    private var sliderPosition = 2
 
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     init {
         attrs?.let { consumeAttributeSet(context, it) }
-        textPaint.color = Color.BLACK
+        textPaint.color = Color.parseColor("#FF444444")
         textPaint.textSize = 48f
     }
 
@@ -56,21 +51,10 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
                     R.styleable.SliderTabs_st_sliderColor,
                     Color.parseColor(DEFAULT_BG_COLOR_HEX)
             )
-            leftTabText = resolveLeftTabText(typedArray)
-            rightTabText = resolveRightTabText(typedArray)
+            options = typedArray.getTextArray(R.styleable.SliderTabs_st_options)
         } finally {
             typedArray.recycle()
         }
-    }
-
-    private fun resolveLeftTabText(typedArray: TypedArray): String {
-        val leftTabText = typedArray.getString(R.styleable.SliderTabs_st_leftTabText)
-        return leftTabText ?: "Левый"
-    }
-
-    private fun resolveRightTabText(typedArray: TypedArray): String {
-        val leftTabText = typedArray.getString(R.styleable.SliderTabs_st_rightTabText)
-        return leftTabText ?: "Правый"
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -105,7 +89,7 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
     override fun onDraw(canvas: Canvas) {
         drawBackground(canvas)
         drawSlider(canvas)
-        drawText(canvas)
+        drawOptionsText(canvas)
     }
 
     private fun drawBackground(canvas: Canvas) {
@@ -127,12 +111,12 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
     }
 
     private fun calculateSliderRectLeft(sliderPosition: Int): Float {
-        val tabWidth = width / TABS_COUNT
+        val tabWidth = width / options.size
         return (sliderPosition - 1) * tabWidth + sliderRectInset
     }
 
     private fun calculateSliderRectRight(sliderPosition: Int): Float {
-        val tabWidth = width / TABS_COUNT
+        val tabWidth = width / options.size
         return sliderPosition * tabWidth - sliderRectInset
     }
 
@@ -144,33 +128,22 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
         return height - sliderRectInset
     }
 
-    private fun drawText(canvas: Canvas) {
-        drawLeftTabText(canvas)
-        drawRightTabText(canvas)
+    private fun drawOptionsText(canvas: Canvas) {
+        options.forEachIndexed { index, text -> drawTextOption(index + 1, text, canvas) }
     }
 
-    private fun drawLeftTabText(canvas: Canvas) {
-        val textWidth = textPaint.measureText(leftTabText)
+    private fun drawTextOption(position: Int, text: CharSequence, canvas: Canvas) {
+        val textWidth = textPaint.measureText(text.toString())
         canvas.drawText(
-                leftTabText,
-                calculateTabTextX(1, textWidth),
-                calculateTabTextY(),
-                textPaint
-        )
-    }
-
-    private fun drawRightTabText(canvas: Canvas) {
-        val textWidth = textPaint.measureText(rightTabText)
-        canvas.drawText(
-                rightTabText,
-                calculateTabTextX(2, textWidth),
+                text.toString(),
+                calculateTabTextX(position, textWidth),
                 calculateTabTextY(),
                 textPaint
         )
     }
 
     private fun calculateTabTextX(sliderPosition: Int, textWidth: Float): Float {
-        val tabWidth = width / TABS_COUNT
+        val tabWidth = width / options.size
         val startX = (sliderPosition - 1) * tabWidth
         return tabWidth.toFloat() / 2 - textWidth / 2 + startX
     }
