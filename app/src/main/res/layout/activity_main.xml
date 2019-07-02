@@ -10,6 +10,7 @@
         android:layout_height="40dp"
         android:padding="16dp"
         app:st_backgroundColor="#CCC"
+        app:st_cornersRadius="24dp"
         app:st_defaultSliderOption="3"
         app:st_options="@array/slider_options" />
 

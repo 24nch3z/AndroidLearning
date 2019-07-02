@@ -14,35 +14,33 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
         private const val DEFAULT_SLIDER_COLOR_HEX = "#FFFFFF"
         private const val DEFAULT_BG_COLOR_HEX = "#EAE9F0"
         private const val DEFAULT_SLIDER_POSITION = 1
-        private const val BACKGROUND_RECT_RADIUS = 60f
+        private const val DEFAULT_CORNERS_RADIUS = 60.0f
     }
 
     private var sliderPosition = DEFAULT_SLIDER_POSITION
-
     private lateinit var options: Array<CharSequence>
-
     private var sliderBackgroundColor: Int = 0
     private var sliderColor: Int = 0
+    private var cornersRadius = 0.0f
 
     private val backgroundRectF = RectF()
     private val rectPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private val sliderRectF = RectF()
-    private val sliderRectInset = 4f
+    private val sliderRectInset = 4.0f
 
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     init {
         attrs?.let { consumeAttributeSet(context, it) }
         textPaint.color = Color.parseColor("#FF444444")
-        textPaint.textSize = 48f
+        textPaint.textSize = 48.0f
     }
 
     private fun consumeAttributeSet(context: Context, attrs: AttributeSet) {
         val typedArray = context
                 .theme
                 .obtainStyledAttributes(attrs, R.styleable.SliderTabs, 0, 0)
-
         try {
             sliderBackgroundColor = typedArray.getColor(
                     R.styleable.SliderTabs_st_backgroundColor,
@@ -54,7 +52,10 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
             )
             options = typedArray.getTextArray(R.styleable.SliderTabs_st_options)
             sliderPosition = typedArray.getInteger(R.styleable.SliderTabs_st_defaultSliderOption, DEFAULT_SLIDER_POSITION)
-            if (sliderPosition > options.size) sliderPosition = DEFAULT_SLIDER_POSITION
+            if (sliderPosition > options.size) {
+                sliderPosition = DEFAULT_SLIDER_POSITION
+            }
+            cornersRadius = typedArray.getDimension(R.styleable.SliderTabs_st_cornersRadius, DEFAULT_CORNERS_RADIUS)
         } finally {
             typedArray.recycle()
         }
@@ -97,13 +98,13 @@ class SliderTabs(context: Context, attrs: AttributeSet?) : View(context, attrs) 
 
     private fun drawBackground(canvas: Canvas) {
         rectPaint.color = sliderBackgroundColor
-        canvas.drawRoundRect(backgroundRectF, BACKGROUND_RECT_RADIUS, BACKGROUND_RECT_RADIUS, rectPaint)
+        canvas.drawRoundRect(backgroundRectF, cornersRadius, cornersRadius, rectPaint)
     }
 
     private fun drawSlider(canvas: Canvas) {
         calculateSliderRectF()
         rectPaint.color = sliderColor
-        canvas.drawRoundRect(sliderRectF, BACKGROUND_RECT_RADIUS, BACKGROUND_RECT_RADIUS, rectPaint)
+        canvas.drawRoundRect(sliderRectF, cornersRadius, cornersRadius, rectPaint)
     }
 
     private fun calculateSliderRectF() {
