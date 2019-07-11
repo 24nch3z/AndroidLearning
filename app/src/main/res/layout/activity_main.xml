@@ -1,4 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:background="#FFF4A9">
+
+    <ImageView
+        android:id="@+id/image_left_top"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/image_left_bottom"
+        app:layout_constraintEnd_toStartOf="@+id/image_right_top"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_owner" />
+
+    <ImageView
+        android:id="@+id/image_right_top"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/image_right_bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/image_left_top"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_document_blue" />
+
+    <ImageView
+        android:id="@+id/image_left_bottom"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/image_right_bottom"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_left_top"
+        app:srcCompat="@drawable/ic_apps_black_24dp" />
+
+    <ImageView
+        android:id="@+id/image_right_bottom"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/image_left_bottom"
+        app:layout_constraintTop_toBottomOf="@+id/image_right_top"
+        app:srcCompat="@drawable/ic_splash_image" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
