@@ -5,9 +5,9 @@ import androidx.room.Relation
 
 data class UserWithPhones(
 
-    @Embedded
+        @Embedded
         val user: User,
 
-    @Relation(parentColumn = "id", entityColumn = "user_id", entity = Phone::class)
+        @Relation(parentColumn = "id", entityColumn = "user_id", entity = Phone::class)
         val phones: List<Phone>
 )

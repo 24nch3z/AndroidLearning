@@ -7,6 +7,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
 import ru.s4nchez.androidlearning.database.AppDatabase
+import ru.s4nchez.androidlearning.database.entity.Location
+import ru.s4nchez.androidlearning.database.entity.Office
 import ru.s4nchez.androidlearning.database.entity.Phone
 import ru.s4nchez.androidlearning.database.entity.User
 
@@ -58,6 +60,9 @@ object DI {
                                                 number = "666",
                                                 userId = 2
                                         )
+                                )
+                                DI.dataBase(context).officeDao().insert(
+                                        Office(name = "Офис 1", location = Location(423.543, 534.321))
                                 )
                             }.subscribeOn(Schedulers.io()).subscribe()
                         }
