@@ -1,9 +1,10 @@
-package ru.s4nchez.androidlearning
+package ru.s4nchez.androidlearning.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import io.reactivex.Observable
+import ru.s4nchez.androidlearning.database.entity.Phone
 
 @Dao
 interface PhoneDao {

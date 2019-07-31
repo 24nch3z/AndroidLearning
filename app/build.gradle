@@ -27,6 +27,7 @@ ext {
     rxandroid = '2.1.1'
     roomrx = '2.2.0-alpha01'
     material = '1.0.0'
+    stetho = '1.5.0'
 }
 
 dependencies {
@@ -48,4 +49,6 @@ dependencies {
     implementation "androidx.room:room-rxjava2:$roomrx"
 
     implementation "com.google.android.material:material:$material"
+
+    implementation "com.facebook.stetho:stetho:$stetho"
 }
